@@ -33,13 +33,24 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check version cache
+        id: cache
+        run: |
+          if [ -f .task-version ]; then
+            CACHED_VERSION=$(cat .task-version)
+            echo "cached_version=${CACHED_VERSION}" >> $GITHUB_OUTPUT
+            echo "Cached Task version: ${CACHED_VERSION}"
+          else
+            echo "cached_version=main" >> $GITHUB_OUTPUT
+          fi
+
       - name: Extract version
         id: version
         run: |
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/}
           else
-            VERSION=${{ github.event.inputs.task_version || 'latest' }}
+            VERSION=${{ github.event.inputs.task_version || steps.cache.outputs.cached_version }}
           fi
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
@@ -51,7 +62,7 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
-          platforms: linux/amd64,linux/arm64,linux/arm/v7,windows/amd64
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           build-args: |
             TASK_VERSION=${{ steps.version.outputs.version }}
 
