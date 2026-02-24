@@ -7,7 +7,6 @@ A minimal multi-architecture Docker image with [Task](https://taskfile.dev/) ins
 - **Base Image**: `scratch` (minimal footprint)
 - **Supported Architectures**: 
   - Linux: amd64, arm64, armv7
-  - Windows: amd64
 - **Registry**: `ghcr.io/trulede/task`
 
 ## Usage
@@ -18,4 +17,4 @@ docker run --rm ghcr.io/trulede/task:latest --version
 
 ## License
 
-This project is licensed under the GPL-2.0 License.
+This project is licensed under the Apache 2.0 License.
