@@ -11,6 +11,12 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: task
+  PLATFORMS: |
+    linux/amd64
+    linux/arm/v7
+    linux/arm64/v8
+    linux/386
+    windows/amd64
 
 jobs:
   build:
@@ -62,7 +68,7 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
             ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
-          platforms: linux/amd64
+          platforms:  ${{ env.PLATFORMS }}
           build-args: |
             TASK_VERSION=${{ steps.version.outputs.version }}
 
